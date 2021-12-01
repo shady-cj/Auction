@@ -1,2 +1,2 @@
 # Auction
-An e-commerce auctioning site (cs50web solution)
+An e-commerce auctioning django project with NO JAVASCRIPT(cs50web solution)
