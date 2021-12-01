@@ -1,0 +1,127 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+{% if not product.active %}
+<div class='msg-display'>
+
+	
+		{% if lastbid.bid_user.id is user.id %}
+			<h1>{{alert}}</h1>
+		{% elif user.id is creator %}
+			<h1>{{creatormessage}}</h1>
+		{% else %}
+			<h1>{{closemessage}}</h1>
+		{% endif %}
+</div>
+{% else %}
+
+
+	{% if message %}
+		<em style="color:red; font-size:5vw;white-space:nowrap;">{{message}}!!!</em>
+	{% endif %}
+
+	<h1 class='listing-header'>{{product.product_name}}</h1>
+	<div class='detail-con'>
+		<img src="{{product.product_image.url}}">
+		<div class='listing-detail'>
+			<span>Details</span>
+			<p>
+				<em> {{product.product_description}}</em>
+			</p>
+			<p>
+				<b>listed by:</b><em>{% if user.id is product.product_creator.id %} you {% else %}{{product.product_creator}}{% endif %}</em>
+				
+			</p>
+			<p>
+				<b>Category:</b><a href="{% url 'categoryitems' product.product_category.id %}" >{{product.product_category}}</a>
+			</p>
+			<p>
+				<b>Price:</b>${{product.product_price}}
+			</p>
+			<p>
+				<b>Total bids:</b><a href="{% url 'bid' product.id %}" >{{bid_total}}</a>
+
+			</p>
+			
+		</div>
+	</div>
+	<div class='bid-form'>
+		<form action="{% url 'bid' product.id %}" method="post">
+			{% csrf_token %}
+			<label for="bid">Bid Price:</label>
+			<input type="number" id= 'bid' max="1000000000" min="{{product.product_price}}" name="bidprice">
+			<input type="text" hidden name="user" value="{{user.id}}">
+			<input type="submit" id="btnsubmit" value="Bid">
+		</form>
+		<div id="watchlist-closebid">
+			{% if user.id is creator or user.is_superuser %}
+				<div id="close-bid">
+					{% if not bid_total %}
+					<form action="{% url 'closebid' %}" method="post">
+						{% csrf_token %}
+						<input type="text" hidden name="closebid" value="{{product.id}}">
+						<input class="closebid-btn-disabled" type="submit" value="Close Bids" disabled>
+					</form>
+					{% else %}
+					<form action="{% url 'closebid' %}" method="post">
+						{% csrf_token %}
+						<input type="text" hidden name="closebid" value="{{product.id}}">
+						<input class="closebid-btn" type="submit" value="Close Bids" >
+					</form>
+					{% endif %}
+				</div>
+			{% endif %}
+			<div id='watchlist-con'>
+
+				{% if not userwatchlist %}
+					<form action="{% url 'watchlist' user.id %}" method="post">
+						{% csrf_token %}
+						<input type="text" hidden name="addwatchlist" value="{{ watchlist.id }}">
+						<input type="submit" id="watchlistbtn" value="Add To WatchList">
+					</form>
+				{% else %}
+					<form action="{% url 'watchlistremove' user.id %}" method="post">
+					{% csrf_token %}
+						<input type="text" hidden name="watchlist" value="{{watchlist.id}}">
+						<input id="watchlistremovebtn" type="submit" value="Remove from Watchlist">
+					</form>
+				{% endif %}
+
+			</div>
+
+		</div>
+
+	</div>
+	
+	<div class='comment-con'>
+		<form action="{% url 'comment' product.id %}" method="post">
+			{% csrf_token %}
+			<input hidden type="text" name="user" value="{{user.id}}">
+			<div>
+				<textarea title="Enter your comments here"  name="comment" placeholder="comment here!!!" required></textarea>
+				<input class='post-comment' type="submit" value="Post">
+			</div>
+
+		</form>
+		{% if comments %}
+		<div class="comment-section">
+			<h1 class='listing-header'>COMMENTS</h1>
+			{% for comment in comments %}
+				<div class='comments-list'>
+					<p>{{comment.comment}}<br>-
+					<i>by {{comment.comment_user}} on {{comment.comment_datetime}}</i></p>
+					{% if user.id is comment.comment_user.id or user.is_superuser %} 
+						<form action="{% url 'commentdelete' comment.id %}" method="post">
+							{% csrf_token %}
+							<input type="submit" value="Delete">
+						</form>
+					{% endif %}
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+	{% endif %}
+{% endif %}
+		
+	
+{% endblock %}

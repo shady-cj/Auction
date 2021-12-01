@@ -1,0 +1,21 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h1 class='listing-header'>Closed Listing</h1>
+	<div class="main">
+		{% for product in products %}
+		{% if not product.active %}
+			<a href="{% url 'listingpage' product.id %}" >
+				<div class="submain close-sub">
+					<img class="img closed" src="{{product.product_image.url}}">
+					<div class='close-tag'>CLOSED</div>
+					<p class='prod-name'>{{ product.product_name }}</p>
+					<em class='prod-desc'>{{ product.product_description|truncatewords:14 }}</em>
+					<p class='prod-price'><b style="color:black;">${{ product.product_price }}</b></p>
+					<p class='prod-creator'>created by <em>{% if user.id is product.product_creator.id %} you {% else %}{{product.product_creator}}{% endif %}</em> on {{product.product_creation_date}}</p>
+				</div>
+			</a>
+		{% endif %}
+		{% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2 class='listing-header'>Active Listings</h2>
+	<div class="main">
+		{% for product in products %}
+			{% if product.active %}
+			<a href="{% url 'listingpage' product.id %}" >
+				<div class="submain">
+					<img class="img" src="{{product.product_image.url}}">
+					<p class='prod-name'>{{ product.product_name }}</p>
+					<em class='prod-desc'>{{ product.product_description|truncatewords:14}}</em>
+					<p class='prod-price'><b style="color:black;">${{ product.product_price }}</b></p>
+					<p class='prod-creator'>Created by <em>{% if user.id is product.product_creator.id %} you {% else %}{{product.product_creator}}{% endif %}</em> on {{product.product_creation_date}}</p>
+		    	</div>
+			</a>
+		    {% endif %}
+		{% endfor %}
+    </div>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends 'auctions/layout.html' %}
+
+
+
+{% block body %}
+
+
+	<h1 class='listing-header'>Your WatchList Products</h1>
+	{% for watchlist in watchlists %}
+	 
+
+		<form class='list-block watchblock' action="{% url 'watchlistremove' user.id %}" method="post">
+			{% csrf_token %}
+				<a class='watchblock-link' href="{% url 'listingpage' watchlist.watchlist_product.id %}" >{{watchlist.watchlist_product.product_name}}({{watchlist.watchlist_product.product_description}})</a>
+				<input type="text" hidden name="watchlist" value="{{watchlist.id}}">
+				<button class='rm-watch' type='submit'><i class="fa fa-trash-o"></i></button>
+		</form>
+		
+	{% endfor %}
+		
+		
+{% endblock %}

@@ -1,0 +1,96 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta name= "viewport" content="width = device-width , initial-scale = 1.0">
+        <title>{% block title %}Auctions{% endblock %}</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link href="{% static 'auctions/styles.css' %}" rel="stylesheet">
+    </head>
+    <body>
+        <section id='nav-section'>
+            <h1>Auctions</h1>
+            
+    
+            <ul class="nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'index' %}">Active Listings</a>
+                </li>
+                <li class="nav-item">
+                    <a href="{% url 'category' %}" class="nav-link" >Categories</a>
+                </li>
+                {% if user.is_authenticated %}
+                    <li class="nav-item desktop-view">
+                        <a class="nav-link" href="{% url 'createlisting' %}" >Create Listing</a>
+                    </li>
+                    <li class="nav-item desktop-view">
+                        <a class="nav-link" href="{% url 'watchlist' user.id %}" >Watchlist {% if watch %}<span style="background-color:lightgray;  color:black;  display:inline-block;  height:20px;  width:20px;  line-height: 20px; text-align: center; font-size:1.2vw;  border-radius: 50%; font-weight:bold;">{{length}}</span>{% endif %}</a>
+                    </li>
+                    <li class="nav-item desktop-view">
+                        <a class="nav-link" href="{% url 'closedlisting' %}">Closed Listing</a>
+                    </li>
+                    <li class="nav-item desktop-view">
+                        <a class="nav-link" href="{% url 'logout' %}">Log Out</a>
+                    </li>
+
+                    <li class="tab-view">
+                        MORE
+                        <div class='sub-view'>
+                            <a class="nav-link" href="{% url 'createlisting' %}" >Create Listing</a>
+                            <a class="nav-link" href="{% url 'watchlist' user.id %}" >Watchlist {% if watch %}<span style="background-color:lightgray;color:black;padding:2px 3px;font-size:1.2vw; font-weight:bold;">{{length}}</span>{% endif %}</a>
+                            <a class="nav-link" href="{% url 'closedlisting' %}">Closed Listing</a>
+                        </div>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'login' %}">Log In</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link reg" href="{% url 'register' %}">Register</a>
+                    </li>
+                {% endif %}
+            </ul>
+
+
+            
+            <nav class='ham-con'>
+                <i class="fa fa-align-right"></i>
+                <div class= 'ham'>
+                    
+                    <a href="{% url 'index' %}">Active Listings</a>
+                    <a href="{% url 'category' %}" >Categories</a>
+                    {% if user.is_authenticated %}
+                   
+                        <a href="{% url 'createlisting' %}" >Create Listing</a>
+                        <a href="{% url 'watchlist' user.id %}" >Watchlist {% if watch %}<span style="background-color:lightgray;color:black;padding:2px 3px;font-size:1.2vw; font-weight:bold;">{{length}}</span>{% endif %}</a>
+                    
+                        <a href="{% url 'closedlisting' %}">Closed Listing</a>
+                     
+                 
+                        <a href="{% url 'logout' %}">Log Out</a>
+            
+                    {% else %}
+                        <a href="{% url 'login' %}">Log In</a>
+                        <a class="reg" href="{% url 'register' %}">Register</a>
+                    {% endif %}
+                </div>
+            </nav>
+            
+
+        </section>
+        <div id='user-auth'>
+            
+            {% if user.is_authenticated %}
+                signed in as <strong>{{ user.username|title }}</strong>.
+            {% else %}
+                Not signed in.
+            {% endif %}
+        </div>
+        
+        {% block body %}
+        {% endblock %}
+    </body>
+</html>

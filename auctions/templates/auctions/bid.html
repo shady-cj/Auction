@@ -1,0 +1,16 @@
+{% extends 'auctions/layout.html' %}
+
+
+{% block body %}
+	<div class='listing-header'>
+		
+		CURRENT BIDS
+
+	</div>
+	{% for bid in bids %}
+		<span  class='list-block'>{{bid}}</span>
+	{% empty %}
+		No bids
+	{% endfor %}
+
+{% endblock %}
